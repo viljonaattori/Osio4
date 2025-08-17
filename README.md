@@ -9,3 +9,9 @@
 6. Luo tietokanta
 7. Jaottele moduulit
 8. npm install
+9. npm install cross-env integraatio testaukseen
+
+tekemättömiä \* tehtäviä 4.5-4.7 ja 4.11, 4.12
+
+npm run dev === kehitys moodi
+npm start === tuotanto
