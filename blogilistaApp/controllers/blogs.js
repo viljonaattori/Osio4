@@ -12,8 +12,16 @@ blogsRouter.get("/", async (request, response) => {
 blogsRouter.post("/", async (request, response) => {
   const body = request.body;
 
-  // esim. otetaan eka käyttäjä kannasta
-  const user = await User.findOne();
+  if (!request.token) {
+    return response.status(401).json({ error: "token missing" });
+  }
+
+  const decodedToken = jwt.verify(request.token, process.env.SECRET);
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: "token invalid" });
+  }
+
+  const user = await User.findById(decodedToken.id);
 
   const blog = new Blog({
     title: body.title,
@@ -24,7 +32,6 @@ blogsRouter.post("/", async (request, response) => {
   });
 
   const savedBlog = await blog.save();
-
   user.blogs = user.blogs.concat(savedBlog._id);
   await user.save();
 
