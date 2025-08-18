@@ -1,0 +1,10 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InZpbGxlbWF0dGkiLCJpZCI6IjY4YTM2MjkzYzRiYWM4NWFiNjhhMGNmMyIsImlhdCI6MTc1NTUzODkwOCwiZXhwIjoxNzU1NTQyNTA4fQ.oskvpae_pDu7QdBpb5QVIlvRpK-iBnneIw2HVnyOl70
+
+{
+  "title": "REST client toimii",
+  "author": "Ville",
+  "url": "http://example.com",
+  "likes": 10
+}

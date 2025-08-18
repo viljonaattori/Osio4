@@ -1,6 +1,7 @@
 const blogsRouter = require("express").Router();
 const Blog = require("../models/blog");
 const User = require("../models/users");
+const jwt = require("jsonwebtoken");
 
 // Haku
 blogsRouter.get("/", async (request, response) => {
@@ -12,22 +13,36 @@ blogsRouter.get("/", async (request, response) => {
 blogsRouter.post("/", async (request, response) => {
   const body = request.body;
 
-  if (!request.token) {
+  // --- Token haetaan headerista ---
+  const authorization = request.get("authorization");
+  let token = null;
+  if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
+    token = authorization.substring(7);
+  }
+
+  if (!token) {
     return response.status(401).json({ error: "token missing" });
   }
 
-  const decodedToken = jwt.verify(request.token, process.env.SECRET);
+  let decodedToken;
+  try {
+    decodedToken = jwt.verify(token, process.env.SECRET);
+  } catch (err) {
+    return response.status(401).json({ error: "token invalid" });
+  }
+
   if (!decodedToken.id) {
     return response.status(401).json({ error: "token invalid" });
   }
 
+  // --- Haetaan käyttäjä ---
   const user = await User.findById(decodedToken.id);
 
   const blog = new Blog({
     title: body.title,
     author: body.author,
     url: body.url,
-    likes: body.likes || 0,
+    likes: body.likes,
     user: user._id,
   });
 
