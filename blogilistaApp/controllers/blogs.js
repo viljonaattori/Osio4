@@ -13,20 +13,14 @@ blogsRouter.get("/", async (request, response) => {
 blogsRouter.post("/", async (request, response) => {
   const body = request.body;
 
-  // --- Token haetaan headerista ---
-  const authorization = request.get("authorization");
-  let token = null;
-  if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
-    token = authorization.substring(7);
-  }
-
-  if (!token) {
+  // Token middleware
+  if (!request.token) {
     return response.status(401).json({ error: "token missing" });
   }
 
   let decodedToken;
   try {
-    decodedToken = jwt.verify(token, process.env.SECRET);
+    decodedToken = jwt.verify(request.token, process.env.SECRET);
   } catch (err) {
     return response.status(401).json({ error: "token invalid" });
   }
@@ -35,7 +29,7 @@ blogsRouter.post("/", async (request, response) => {
     return response.status(401).json({ error: "token invalid" });
   }
 
-  // --- Haetaan käyttäjä ---
+  // Haetaan käyttäjä
   const user = await User.findById(decodedToken.id);
 
   const blog = new Blog({
