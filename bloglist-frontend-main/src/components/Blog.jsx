@@ -71,5 +71,28 @@ Blog.propTypes = {
     name: PropTypes.string,
   }),
 };
-
+Blog.propTypes = {
+  blog: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    author: PropTypes.string.isRequired,
+    url: PropTypes.string,
+    likes: PropTypes.number,
+    user: PropTypes.oneOfType([
+      PropTypes.shape({
+        id: PropTypes.string,
+        name: PropTypes.string,
+        username: PropTypes.string,
+      }),
+      PropTypes.string,
+    ]),
+  }).isRequired,
+  onLike: PropTypes.func.isRequired,
+  onRemove: PropTypes.func.isRequired,
+  currentUser: PropTypes.shape({
+    id: PropTypes.string,
+    username: PropTypes.string,
+    name: PropTypes.string,
+  }),
+};
 export default Blog;
