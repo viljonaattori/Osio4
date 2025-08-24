@@ -13,10 +13,8 @@ const Blog = ({ blog, onLike, onRemove, currentUser }) => {
     marginBottom: 5,
   };
 
-  // Näytetään remove vain jos blogin lisääjä === kirjautunut käyttäjä
   const canRemove = (() => {
     if (!currentUser || !blog.user) return false;
-    // user voi olla joko objekti tai pelkkä id
     if (typeof blog.user === "string") {
       return blog.user === currentUser.id;
     }
@@ -30,7 +28,11 @@ const Blog = ({ blog, onLike, onRemove, currentUser }) => {
     <div className="blog" style={blogStyle}>
       <div>
         {blog.title} {blog.author}{" "}
-        <button className="toggle-btn" onClick={() => setExpanded((v) => !v)}>
+        <button
+          className="toggle-btn"
+          data-testid="toggle-view"
+          onClick={() => setExpanded((v) => !v)}
+        >
           {expanded ? "hide" : "view"}
         </button>
       </div>
@@ -38,9 +40,13 @@ const Blog = ({ blog, onLike, onRemove, currentUser }) => {
       {expanded && (
         <div className="blog-details">
           <div className="blog-url">{blog.url}</div>
-          <div className="blog-likes">
+          <div className="blog-likes" data-testid="likes-count">
             likes {blog.likes ?? 0}{" "}
-            <button className="like-btn" onClick={() => onLike(blog)}>
+            <button
+              className="like-btn"
+              data-testid="like-button"
+              onClick={() => onLike(blog)}
+            >
               like
             </button>
           </div>
@@ -49,6 +55,7 @@ const Blog = ({ blog, onLike, onRemove, currentUser }) => {
           {canRemove && (
             <button
               className="remove-btn"
+              data-testid="remove-button"
               onClick={() => onRemove(blog)}
               style={{ marginTop: 6 }}
             >
@@ -61,16 +68,6 @@ const Blog = ({ blog, onLike, onRemove, currentUser }) => {
   );
 };
 
-Blog.propTypes = {
-  blog: PropTypes.object.isRequired,
-  onLike: PropTypes.func.isRequired,
-  onRemove: PropTypes.func.isRequired,
-  currentUser: PropTypes.shape({
-    id: PropTypes.string,
-    username: PropTypes.string,
-    name: PropTypes.string,
-  }),
-};
 Blog.propTypes = {
   blog: PropTypes.shape({
     id: PropTypes.string.isRequired,
@@ -95,4 +92,5 @@ Blog.propTypes = {
     name: PropTypes.string,
   }),
 };
+
 export default Blog;
