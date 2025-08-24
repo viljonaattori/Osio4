@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const Blog = require("../models/blog");
-const User = require("../models/user");
+const User = require("../models/users");
 
 router.post("/reset", async (req, res) => {
   await Blog.deleteMany({});
